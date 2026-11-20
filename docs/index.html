@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>아이랑 캠핑 한 번에 | 캠핑장·날씨·병원·마트·가볼 곳</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="아이랑 캠핑 한 번에 🏕️">
+<meta property="og:description" content="아이 시설 있는 캠핑장 + 주말 날씨 + 근처 응급실·약국·마트 + 주변 가볼 곳을 한 화면에">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#EEF7EE;--card:#fff;--ink:#36403a;--sub:#7b857e;--main:#2F9E5B;--deep:#1F7A44;--pink:#FF7A59;--line:#D6EAD9;--warn:#E07B00;--bad:#D64545;--sky:#3FA7F5}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-text-size-adjust:100%}
+  header{padding:20px 16px 4px;text-align:center}
+  h1{font-family:Jua,sans-serif;font-weight:400;font-size:28px;margin:0;line-height:1.3}
+  h1 span:nth-child(7n+1){color:#FF5A5F}h1 span:nth-child(7n+2){color:#FF9F1C}h1 span:nth-child(7n+3){color:#F2B705}
+  h1 span:nth-child(7n+4){color:#4CB84C}h1 span:nth-child(7n+5){color:#3FA7F5}h1 span:nth-child(7n+6){color:#6C63FF}h1 span:nth-child(7n){color:#C86DD7}
+  .sub{font-family:Jua,sans-serif;color:var(--main);font-size:15.5px;margin-top:3px}
+  .upd{font-size:12px;color:var(--sub);margin-top:6px}
+  .filters{background:var(--bg);border-bottom:1px solid var(--line);padding:8px 12px 4px;margin-top:8px}
+  .wrap{max-width:640px;margin:0 auto}
+  .top{display:flex;gap:8px;align-items:center}
+  select{font-size:16px;border:2px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);padding:9px 8px;min-height:44px;font-family:Jua,sans-serif;flex:1;min-width:0}
+  .loc{flex:0 0 auto;border:0;background:var(--pink);color:#fff;border-radius:14px;padding:0 13px;min-height:44px;font-family:Jua,sans-serif;font-size:15px}
+  .loc.on{background:var(--main)}
+  .lbl{font-size:12px;color:var(--sub);margin:8px 2px 0;font-family:Jua,sans-serif}
+  .row-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:5px 0 4px}
+  .row-chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:14px;font-family:Jua,sans-serif;color:var(--ink);min-height:36px;white-space:nowrap}
+  .chip.on{background:var(--main);border-color:var(--main);color:#fff}
+  .chip.day{display:flex;flex-direction:column;align-items:center;line-height:1.15;padding:5px 11px;border-radius:14px}
+  .chip.day small{font-size:11px;opacity:.8}
+  .chip.day.we{color:#D64545}.chip.day.we.on{color:#fff}
+  main{padding:10px 12px;max-width:640px;margin:0 auto}
+  .count{font-size:14px;color:var(--sub);margin:4px 4px 10px;line-height:1.5}
+  .card{background:var(--card);border-radius:22px;margin-bottom:14px;box-shadow:0 2px 0 var(--line);overflow:hidden}
+  .pic{width:100%;height:150px;object-fit:cover;display:block;background:#E3EFE5}
+  .in{padding:12px 14px 12px}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+  .tag{font-size:12px;padding:3px 9px;border-radius:999px;background:#EAF6EC;color:var(--deep)}
+  .tag.kid{background:#FFF1E0;color:#C25E00;font-weight:700}
+  .tag.ty{background:#F1F0F0;color:#666}
+  .t{font-size:18px;font-weight:700;line-height:1.35;margin:0 0 3px;word-break:keep-all}
+  .li{font-size:13.5px;color:var(--sub);margin-bottom:4px}
+  .row{font-size:13.5px;color:#4f5852;margin:3px 0;line-height:1.5}
+  .wx{display:flex;align-items:center;gap:10px;background:#F2F9FF;border-radius:14px;padding:8px 10px;margin:8px 0 6px}
+  .wx .ic{font-size:30px;line-height:1}
+  .wx b{font-size:15px}
+  .wx .w2{font-size:12.5px;color:#4f5852;margin-top:2px}
+  .warns{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+  .warn{font-size:11.5px;padding:2px 7px;border-radius:999px;background:#FFE9E6;color:var(--bad);font-weight:700}
+  .warn.cold{background:#E6F1FF;color:#2766C2}
+  .near{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .near span{font-size:12.5px;background:#F7F7F4;border-radius:10px;padding:4px 8px}
+  .near span.far{background:#FFF1E0;color:#B35500}
+  .btns{display:flex;gap:6px;margin-top:10px}
+  .btns a,.btns button{flex:1;text-align:center;text-decoration:none;border:0;border-radius:12px;padding:10px 2px;font-family:Jua,sans-serif;font-size:14.5px;min-height:42px}
+  .b1{background:var(--main);color:#fff}.b2{background:#E8F7EA;color:#03A64A}.b3{background:#EEF4FF;color:#2F6FD6}.b4{background:#FFF1E0;color:#C25E00}
+  .detail{border-top:2px dashed var(--line);margin-top:12px;padding-top:4px}
+  .detail[hidden]{display:none}
+  .sec{margin-top:10px}
+  .sec h3{font-family:Jua,sans-serif;font-weight:400;font-size:17px;margin:0 0 6px;color:var(--deep)}
+  .it{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid #F0F3F0;font-size:13.5px}
+  .it:first-of-type{border-top:0}
+  .it .nm{flex:1;min-width:0;line-height:1.4}
+  .it .nm small{display:block;color:var(--sub);font-size:12px}
+  .it a.s{flex:0 0 auto;font-size:12.5px;text-decoration:none;background:#F2F9F3;color:var(--deep);border-radius:10px;padding:6px 9px;font-family:Jua,sans-serif}
+  .it a.s.call{background:#FFECEB;color:var(--bad)}
+  .badge{font-size:11px;background:#FFF1E0;color:#C25E00;border-radius:6px;padding:1px 5px;margin-left:4px;font-weight:700}
+  .days{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .days div{flex:0 0 auto;text-align:center;background:#F6FAF7;border-radius:12px;padding:6px 8px;font-size:12px;min-width:62px;line-height:1.45}
+  .days div.sel{background:var(--main);color:#fff}
+  .days div .e{font-size:20px}
+  .info{font-size:13px;line-height:1.65;color:#4f5852;word-break:keep-all}
+  .empty{text-align:center;color:var(--sub);padding:36px 0;line-height:1.7}
+  .more{display:block;width:100%;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px;font-family:Jua,sans-serif;font-size:16px;color:var(--ink);margin:4px 0 16px}
+  .more[hidden]{display:none}
+  .note{background:#FFF8E1;border-radius:14px;padding:9px 12px;font-size:12.5px;line-height:1.55;color:#7a5b00;margin:0 0 10px}
+  .sample{background:#FFF3B0;color:#7a6200;text-align:center;font-size:13px;padding:8px}
+  footer{text-align:center;padding:16px 16px 40px;font-size:12px;color:var(--sub);line-height:1.7}
+  footer a.blog{display:inline-block;margin-top:10px;background:#FFF0EB;color:var(--pink);font-family:Jua,sans-serif;font-size:17px;text-decoration:none;padding:12px 18px;border-radius:14px}
+  .lock{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
+  .lock[hidden]{display:none}
+  .lock .box{background:#fff;border-radius:24px;padding:28px 22px;max-width:360px;width:100%;text-align:center;box-shadow:0 3px 0 var(--line)}
+  .lock .emo{font-size:52px}
+  .lock h2{font-family:Jua,sans-serif;font-weight:400;font-size:24px;margin:8px 0 6px;color:var(--main)}
+  .lock p{word-break:keep-all;font-size:14px;color:var(--sub);line-height:1.6;margin:0 0 16px}
+  .lock input{width:100%;font-size:18px;text-align:center;border:2px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+  .lock button{width:100%;border:0;border-radius:14px;padding:14px;font-family:Jua,sans-serif;font-size:18px;background:var(--main);color:#fff}
+  .lock .err{color:#E0603A;font-size:13px;min-height:18px;margin-top:8px}
+  .lock a{display:block;margin-top:14px;color:var(--pink);font-size:14px}
+</style>
+</head>
+<body>
+<div class="lock" id="lock" hidden>
+  <div class="box">
+    <div class="emo">🔒🏕️</div>
+    <h2>아이랑 캠핑 한 번에</h2>
+    <p>블로그 <b>아이랑 오늘 뭐하지?</b> 이웃님 전용 페이지예요.<br>비밀번호는 블로그 글에 댓글 남겨주시면<br>비밀댓글로 보내드려요 💌</p>
+    <input type="password" id="pw" placeholder="비밀번호" autocomplete="current-password" enterkeyhint="go">
+    <button id="pwBtn">열기</button>
+    <div class="err" id="pwErr"></div>
+    <a href="https://blog.naver.com/todaywithkids">블로그로 가서 비밀번호 받기 →</a>
+  </div>
+</div>
+<div id="sample" class="sample" hidden>지금은 샘플 데이터예요 (실제 캠핑장 아님).</div>
+<header>
+  <h1 id="h1"></h1>
+  <div class="sub">캠핑장 · 날씨 · 병원 · 마트 · 가볼 곳</div>
+  <div class="upd" id="upd">불러오는 중…</div>
+</header>
+<div class="filters"><div class="wrap">
+  <div class="top">
+    <select id="region" aria-label="지역"></select>
+    <button class="loc" id="loc">📍 내 위치</button>
+  </div>
+  <div class="row-chips" id="rad" hidden></div>
+  <div class="lbl">📅 언제 가요?</div>
+  <div class="row-chips" id="dates"></div>
+  <div class="row-chips" id="chips"></div>
+</div></div>
+<main>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+  <button class="more" id="more" hidden>더 보기</button>
+</main>
+<footer>
+  데이터: 한국관광공사 고캠핑·TourAPI, 기상청 단기·중기예보, 국립중앙의료원 병·의원/약국/응급의료기관, 소상공인시장진흥공단 상가정보 (공공데이터포털)<br>
+  날씨·행사는 매일, 캠핑장·병원·가게는 매주 자동 갱신 · 거리는 직선거리예요<br>
+  <a class="blog" href="https://blog.naver.com/todaywithkids">🎈 아이랑 오늘 뭐하지? 블로그</a>
+</footer>
+<script>
+const $=id=>document.getElementById(id);
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const WD=["일","월","화","수","목","금","토"];
+let META=null,DAILY=null,PW=null,ME=null,RAD=+(store.get("kcp_rad")||60),DAY=null,SORT="dist",SHOW=20;
+const CACHE={};
+const OPT={};
+const FLAGS=[["T","🤸 트램펄린"],["W","💦 물놀이장"],["P","🛝 놀이터"],["V","🏞️ 계곡·바다"],["M","🏪 매점"],["E","⚡ 전기"],["X","🎨 체험"],["G","✨ 글램핑"],["C","🚐 카라반"],["A","🐶 반려견"],["R","⛺ 장비대여"]];
+const KIDF={T:"🤸 트램펄린",W:"💦 물놀이장",P:"🛝 놀이터",K:"👶 키즈",V:"🏞️ 물놀이",X:"🎨 체험"};
+
+(t=>{$("h1").innerHTML=[...t].map(c=>c===" "?" ":`<span>${c}</span>`).join("")})("아이랑 캠핑 한 번에 🏕️");
+
+// ---------- 날짜
+const kstNow=()=>new Date(Date.now()+9*3600e3);
+const ymd=d=>d.toISOString().slice(0,10).replace(/-/g,"");
+const fromYmd=s=>new Date(Date.UTC(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8)));
+const md=s=>`${+s.slice(4,6)}/${+s.slice(6,8)}`;
+const wd=s=>WD[fromYmd(s).getUTCDay()];
+
+// ---------- 거리
+function dist(a,b,c,d){const R=6371,r=Math.PI/180,x=(d-b)*r*Math.cos((a+c)/2*r),y=(c-a)*r;return Math.sqrt(x*x+y*y)*R}
+const km=v=>v<1?`${Math.round(v*1000)}m`:`${v<10?v.toFixed(1):Math.round(v)}km`;
+const drive=v=>{const m=Math.round(v*1.35/55*60/5)*5;return m<60?`차로 약 ${Math.max(5,m)}분`:`차로 약 ${Math.floor(m/60)}시간${m%60?` ${m%60}분`:""}`};
+
+// ---------- 복호화
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function decrypt(enc,pw){
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(enc.salt),iterations:enc.iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(enc.iv)},key,b64(enc.ct));
+  if(enc.z==="gzip"){const st=new Blob([pt]).stream().pipeThrough(new DecompressionStream("gzip"));return JSON.parse(await new Response(st).text())}
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+const getJ=async p=>{const r=await fetch(`${p}?v=${encodeURIComponent(META.updated)}`);if(!r.ok)throw new Error(p);return r.json()};
+async function load(reg,pw=PW){
+  if(CACHE[reg])return CACHE[reg];
+  const d=await decrypt(await getJ(`camps/${META.regions[reg].code}.enc.json`),pw);
+  d.c.forEach(c=>c.sd=reg);
+  return CACHE[reg]=d.c;
+}
+
+// ---------- 날씨
+const SKY={1:"☀️",3:"⛅",4:"☁️"};
+function wxOf(c,day){
+  const s=DAILY.short&&DAILY.short.g&&DAILY.short.g[c.wg];
+  if(s&&s[day]){const [tx,tn,pop,pty,w,sky]=s[day];
+    const icon=pty===2?"🌨️":pty===1||pop>=60?"🌧️":pop>=30?"🌦️":SKY[sky]||"⛅";
+    return {icon,tx,tn,pop,w:w/10,rain:pty>0||pop>=60,src:"단기"}}
+  const m=DAILY.mid&&DAILY.mid.r&&DAILY.mid.r[c.mr];
+  if(m&&m[day]){const [am,pm,pa,pp]=m[day];const pop=Math.max(pa||0,pp||0);const t=(pm||am||"");
+    const icon=/눈/.test(t)?"🌨️":/비|소나기/.test(t)?"🌧️":/흐림/.test(t)?"☁️":/구름/.test(t)?"⛅":"☀️";
+    return {icon,pop,txt:am===pm||!pm?am:`${am} → ${pm}`,rain:/비|눈|소나기/.test(t)||pop>=60,src:"중기"}}
+  return null;
+}
+function wxScore(w){if(!w)return 50;let s=100-(w.pop||0);if(w.rain)s-=30;if(w.tn!=null)s+=Math.min(w.tn,10)*2;if(w.w>=7)s-=15;return s}
+function warns(w){
+  const out=[];if(!w)return out;
+  if(w.tn!=null&&w.tn<=-5)out.push(`<span class="warn cold">🥶 밤 ${w.tn}℃ 강추위</span>`);
+  else if(w.tn!=null&&w.tn<=0)out.push(`<span class="warn cold">❄️ 밤 영하</span>`);
+  if(w.rain)out.push(`<span class="warn">☔ 비·눈 예보</span>`);
+  if(w.w>=7)out.push(`<span class="warn">💨 바람 ${w.w.toFixed(0)}m/s</span>`);
+  return out;
+}
+
+// ---------- 병원 진료시간 (선택한 날 요일)
+const toMin=s=>parseInt(s.slice(0,2),10)*60+parseInt(s.slice(2,4),10);
+const hm=m=>{m=((m%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")};
+function hoursOn(t,day){
+  if(!t)return "";
+  const i=(fromYmd(day).getUTCDay()+6)%7,s=t.substr(i*8,8);
+  if(!s||s[0]==="-")return `${wd(day)} 휴진`;
+  const o=toMin(s.slice(0,4)),c=toMin(s.slice(4,8));
+  if(o===0&&c>=1440)return `${wd(day)} 24시간`;
+  return `${wd(day)} ${hm(o)}~${c===1440?"24:00":hm(c)}`;
+}
+
+// ---------- 화면
+function setupUI(){
+  const regs=Object.keys(META.regions);
+  $("region").innerHTML=regs.map(r=>`<option value="${r}">${r} (${META.regions[r].n}곳)</option>`).join("");
+  $("region").value=regs.includes(store.get("kcp_region"))?store.get("kcp_region"):(regs.includes("충남")?"충남":regs[0]);
+  $("region").onchange=()=>{ME=null;$("loc").classList.remove("on");$("loc").textContent="📍 내 위치";$("rad").hidden=true;store.set("kcp_region",$("region").value);SHOW=20;render()};
+  $("loc").onclick=locate;
+  $("more").onclick=()=>{SHOW+=20;render(false)};
+  $("rad").innerHTML=[[30,"30km"],[60,"60km (약 1시간)"],[100,"100km (1시간 반)"],[150,"150km (2시간)"]].map(([v,l])=>`<button class="chip${v===RAD?" on":""}" data-v="${v}">${l}</button>`).join("");
+  $("rad").onclick=e=>{const b=e.target.closest("button");if(!b)return;RAD=+b.dataset.v;store.set("kcp_rad",RAD);[...$("rad").children].forEach(x=>x.classList.toggle("on",x===b));SHOW=20;render()};
+  dates();chips();
+}
+function dates(){
+  const t0=kstNow(),list=[];
+  for(let i=0;i<10;i++){const d=new Date(t0.getTime()+i*864e5);list.push(ymd(d))}
+  const sat=list.find(d=>fromYmd(d).getUTCDay()===6&&d!==list[0])||list.find(d=>fromYmd(d).getUTCDay()===6)||list[0];
+  DAY=DAY||sat;
+  $("dates").innerHTML=list.map((d,i)=>{const w=fromYmd(d).getUTCDay();
+    return `<button class="chip day${w===0||w===6?" we":""}${d===DAY?" on":""}" data-d="${d}">${wd(d)}<small>${i===0?"오늘":i===1?"내일":md(d)}</small></button>`}).join("");
+  $("dates").onclick=e=>{const b=e.target.closest("button");if(!b)return;DAY=b.dataset.d;dates();render(false)};
+}
+function chips(){
+  const list=[["sort","↕️ "+{dist:"가까운 순",kid:"아이 시설 많은 순",wx:"날씨 좋은 순"}[SORT]],["er","🚑 응급실 30km 안"],["dry","☀️ 비 안 오는 곳"]].concat(FLAGS);
+  $("chips").innerHTML=list.map(([k,l])=>`<button class="chip${OPT[k]?" on":""}" data-k="${k}">${l}</button>`).join("");
+  $("chips").onclick=e=>{const b=e.target.closest("button");if(!b)return;const k=b.dataset.k;
+    if(k==="sort"){const o=["dist","kid","wx"];SORT=o[(o.indexOf(SORT)+1)%3];if(SORT==="dist"&&!ME)SORT="kid"}
+    else OPT[k]=!OPT[k];
+    SHOW=20;chips();render()};
+}
+function locate(){
+  if(!navigator.geolocation){alert("이 휴대폰에서는 위치를 쓸 수 없어요. 지역을 직접 골라주세요.");return}
+  $("loc").textContent="찾는 중…";
+  navigator.geolocation.getCurrentPosition(async p=>{
+    ME=[p.coords.latitude,p.coords.longitude];
+    $("loc").textContent="📍 내 주변";$("loc").classList.add("on");$("rad").hidden=false;SORT="dist";chips();SHOW=20;
+    await render();
+  },()=>{$("loc").textContent="📍 내 위치";alert("위치 권한이 꺼져 있어요. 지역을 직접 골라주세요.")},{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
+}
+function boxDist(b){ // 내 위치에서 시도 범위 상자까지 거리
+  const la=Math.min(Math.max(ME[0],b[0]),b[2]),lo=Math.min(Math.max(ME[1],b[1]),b[3]);return dist(ME[0],ME[1],la,lo)}
+async function rows(){
+  let regs;
+  if(ME)regs=Object.entries(META.regions).filter(([,m])=>boxDist(m.box)<=RAD).map(x=>x[0]);
+  else regs=[$("region").value];
+  let out=[];
+  for(const r of regs)out=out.concat(await load(r));
+  if(ME){out.forEach(c=>c._d=dist(ME[0],ME[1],c.la,c.lo));out=out.filter(c=>c._d<=RAD)}
+  else out.forEach(c=>c._d=null);
+  return out;
+}
+let LAST=[];
+async function render(reload=true){
+  if(reload){$("list").innerHTML=`<div class="empty">캠핑장 찾는 중… 🏕️</div>`;LAST=await rows()}
+  let list=LAST.map(c=>({c,w:wxOf(c,DAY)}));
+  for(const [f] of FLAGS)if(OPT[f])list=list.filter(x=>(x.c.f||"").includes(f));
+  if(OPT.er)list=list.filter(x=>x.c.ne&&x.c.ne[0]&&x.c.ne[0][2]<=30);
+  if(OPT.dry)list=list.filter(x=>x.w&&!x.w.rain&&(x.w.pop||0)<40);
+  const kidN=c=>[...(c.f||"")].filter(f=>KIDF[f]).length;
+  if(SORT==="dist"&&ME)list.sort((a,b)=>a.c._d-b.c._d);
+  else if(SORT==="wx")list.sort((a,b)=>wxScore(b.w)-wxScore(a.w)||kidN(b.c)-kidN(a.c));
+  else list.sort((a,b)=>kidN(b.c)-kidN(a.c)||(a.c._d??0)-(b.c._d??0)||a.c.n.localeCompare(b.c.n,"ko"));
+  const where=ME?`내 위치에서 ${RAD}km 안`:$("region").value;
+  $("count").innerHTML=`${where} · 캠핑장 <b>${list.length}</b>곳 · ${wd(DAY)}요일(${md(DAY)}) 날씨 기준`;
+  if(!list.length){
+    $("list").innerHTML=`<div class="empty">조건에 맞는 캠핑장이 없어요 😢<br>필터를 줄이거나 ${ME?"거리를 늘려":"다른 지역을 골라"} 보세요.</div>`;
+    $("more").hidden=true;return;
+  }
+  $("list").innerHTML=(SHOW<=20?`<div class="note">⚠️ 운영·예약·요금은 바뀔 수 있어요. 출발 전 캠핑장에 꼭 확인하세요. 응급 땐 바로 119!</div>`:"")+list.slice(0,SHOW).map(card).join("");
+  $("more").hidden=list.length<=SHOW;
+  $("list").onclick=e=>{const b=e.target.closest(".open");if(!b)return;const c=b.closest(".card"),d=c.querySelector(".detail");
+    if(d.hidden&&!d.dataset.done){d.innerHTML=detail(list.find(x=>x.c.i===c.dataset.i).c);d.dataset.done=1}
+    d.hidden=!d.hidden;b.textContent=d.hidden?"🔎 자세히":"🔼 접기"};
+}
+function nearBits(c){
+  const out=[];
+  const e=c.ne&&c.ne[0],p=c.np&&c.np[0];
+  const cs=(c.ns||[]).find(s=>s[1]==="c"),ms=(c.ns||[]).find(s=>s[1]==="m");
+  out.push(e?`<span class="${e[2]>30?"far":""}">🚑 응급실 ${km(e[2])}</span>`:`<span class="far">🚑 응급실 멀어요</span>`);
+  if(p)out.push(`<span>💊 약국 ${km(p[2])}</span>`);
+  if(cs)out.push(`<span>🏪 편의점 ${km(cs[2])}</span>`);
+  if(ms)out.push(`<span>🛒 마트 ${km(ms[2])}</span>`);
+  return out.join("");
+}
+const q=s=>encodeURIComponent(s);
+function card({c,w}){
+  const tags=[...(c.f||"")].filter(f=>KIDF[f]).map(f=>`<span class="tag kid">${KIDF[f]}</span>`);
+  if((c.f||"").includes("M"))tags.push(`<span class="tag">🏪 매점</span>`);
+  if((c.f||"").includes("A"))tags.push(`<span class="tag">🐶 반려견</span>`);
+  if(c.ty)tags.push(`<span class="tag ty">${esc(c.ty.split(",").slice(0,2).join("·"))}</span>`);
+  const wxh=w?`<div class="wx"><div class="ic">${w.icon}</div><div><b>${wd(DAY)} ${md(DAY)}</b> ${w.tx!=null?`낮 ${w.tx}℃`:""}${w.tn!=null?` · 밤 <b style="color:${w.tn<=0?"#2766C2":"inherit"}">${w.tn}℃</b>`:""}${w.txt?esc(w.txt):""}
+      <div class="w2">비 올 확률 ${w.pop??"-"}%${w.w?` · 바람 ${w.w.toFixed(0)}m/s`:""}${w.src==="중기"?" · 중기예보":""}</div>
+      <div class="warns">${warns(w).join("")}</div></div></div>`
+    :`<div class="wx"><div class="ic">📅</div><div class="w2">${wd(DAY)} ${md(DAY)} 날씨는 아직 예보 전이에요</div></div>`;
+  const resv=c.r||c.h||`https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no=${esc(c.i)}`;
+  return `<div class="card" data-i="${esc(c.i)}">
+    ${c.img?`<img class="pic" loading="lazy" src="${esc(c.img)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}
+    <div class="in">
+    <div class="tags">${tags.join("")}</div>
+    <div class="t">${esc(c.n)}</div>
+    ${c.li?`<div class="li">${esc(c.li)}</div>`:""}
+    <div class="row">📍 ${c._d!=null?`<b>${km(c._d)}</b> (${drive(c._d)}) · `:""}${esc(c.sd)} ${esc(c.sg||"")}</div>
+    ${wxh}
+    <div class="near">${nearBits(c)}</div>
+    <div class="btns">
+      <a class="b1" href="${esc(resv)}" target="_blank" rel="noopener">📅 예약</a>
+      <a class="b2" href="https://search.naver.com/search.naver?ssc=tab.blog.all&query=${q(c.n+" 후기")}" target="_blank" rel="noopener">📝 후기</a>
+      <a class="b3" href="https://map.naver.com/p/search/${q(c.n)}" target="_blank" rel="noopener">🗺 길찾기</a>
+      <button class="b4 open">🔎 자세히</button>
+    </div>
+    <div class="detail" hidden></div>
+    </div></div>`;
+}
+const tel=t=>t?`<a class="s call" href="tel:${esc(t.replace(/[^0-9-]/g,""))}">📞 전화</a>`:"";
+const mapA=(n,la,lo)=>`<a class="s" href="https://map.naver.com/p/search/${q(n)}?c=${lo},${la},15,0,0,0,dh" target="_blank" rel="noopener">🗺 지도</a>`;
+function detail(c){
+  const s=[];
+  // 날씨 여러 날
+  const t0=kstNow(),ds=[];for(let i=0;i<10;i++)ds.push(ymd(new Date(t0.getTime()+i*864e5)));
+  const wl=ds.map(d=>[d,wxOf(c,d)]).filter(x=>x[1]);
+  if(wl.length)s.push(`<div class="sec"><h3>☔ 캠핑장 날씨</h3><div class="days">${wl.map(([d,w])=>`<div class="${d===DAY?"sel":""}">${wd(d)} ${md(d)}<div class="e">${w.icon}</div>${w.tx!=null?`${w.tx}° / ${w.tn??"-"}°`:""}${w.tx==null?`비 ${w.pop??"-"}%`:`<br>비 ${w.pop}%`}</div>`).join("")}</div>
+    <div class="info" style="margin-top:4px">밤 기온은 저녁 6시~다음날 아침 8시 최저기온이에요. 3일 뒤부터는 권역 중기예보라 기온이 없어요.</div></div>`);
+  // 병원
+  const med=[];
+  (c.ne||[]).forEach(r=>med.push(`<div class="it"><div class="nm">🚑 ${esc(r[0])}<small>${km(r[2])} · ${esc(r[5]||"응급실")} · 24시간</small></div>${tel(r[1])}${mapA(r[0],r[3],r[4])}</div>`));
+  (c.nh||[]).forEach(r=>med.push(`<div class="it"><div class="nm">🏥 ${esc(r[0])}${r[6]==="P"?`<span class="badge">소아</span>`:""}<small>${km(r[2])} · ${hoursOn(r[5],DAY)}</small></div>${tel(r[1])}${mapA(r[0],r[3],r[4])}</div>`));
+  (c.np||[]).forEach(r=>med.push(`<div class="it"><div class="nm">💊 ${esc(r[0])}<small>${km(r[2])} · ${hoursOn(r[5],DAY)}</small></div>${tel(r[1])}${mapA(r[0],r[3],r[4])}</div>`));
+  s.push(`<div class="sec"><h3>🏥 아플 때 (가까운 순)</h3>${med.join("")||`<div class="info">근처 정보가 없어요.</div>`}
+    <div class="info">진료시간은 공공데이터 기준이라 다를 수 있어요. 출발 전 전화로 꼭 확인하세요. 위급하면 119!</div></div>`);
+  // 가게
+  if(c.ns&&c.ns.length)s.push(`<div class="sec"><h3>🛒 마트·편의점</h3>${c.ns.map(r=>`<div class="it"><div class="nm">${r[1]==="c"?"🏪":"🛒"} ${esc(r[0])}<small>${km(r[2])}</small></div>${mapA(r[0],r[3],r[4])}</div>`).join("")}
+    <div class="info">시골 가게는 일찍 닫는 곳이 많아요. 영업시간은 지도에서 확인하세요.</div></div>`);
+  // 가볼 곳
+  if(c.ng&&c.ng.length)s.push(`<div class="sec"><h3>🎡 근처 가볼 곳</h3>${c.ng.map(r=>`<div class="it"><div class="nm">${r[1]==="문화시설"?"🏛️":r[1]==="레포츠"?"🚴":"🌳"} ${esc(r[0])}${r[6]>=3?`<span class="badge">아이랑 추천</span>`:""}<small>${km(r[2])} · ${esc(r[1])}</small></div><a class="s" href="https://search.naver.com/search.naver?query=${q(r[0])}" target="_blank" rel="noopener">🔎 보기</a></div>`).join("")}
+    <div class="info">운영시간·휴무는 공식 홈페이지에서 확인하세요.</div></div>`);
+  // 행사
+  const fs=(DAILY.fest||[]).map(f=>[f,dist(c.la,c.lo,f[3],f[4])]).filter(([,d])=>d<=30).sort((a,b)=>a[0][1].localeCompare(b[0][1])||a[1]-b[1]).slice(0,6);
+  if(fs.length)s.push(`<div class="sec"><h3>🎪 근처 행사·축제</h3>${fs.map(([f,d])=>{const on=f[1]<=DAY&&DAY<=f[2];
+    return `<div class="it"><div class="nm">${esc(f[0])}${on?`<span class="badge">${wd(DAY)}요일 진행</span>`:""}<small>${md(f[1])}~${md(f[2])} · ${km(d)} · ${esc(f[5])}</small></div><a class="s" href="https://search.naver.com/search.naver?query=${q(f[0])}" target="_blank" rel="noopener">🔎 보기</a></div>`}).join("")}</div>`);
+  // 캠핑장 정보
+  const info=[];
+  if(c.a)info.push(`📍 ${esc(c.a)}`);
+  if(c.t)info.push(`📞 <a href="tel:${esc(c.t.replace(/[^0-9-]/g,""))}">${esc(c.t)}</a>`);
+  if(c.op||c.od)info.push(`🗓 운영: ${esc([c.op,c.od].filter(Boolean).join(" / "))}`);
+  if(c.rc)info.push(`📅 예약: ${esc(c.rc)}`);
+  if(c.sb)info.push(`🧰 시설: ${esc(c.sb.replace(/,/g,", "))}`);
+  if(c.pf)info.push(`🏞️ 주변: ${esc(c.pf.replace(/,/g,", "))}`);
+  if(c.x)info.push(`🎨 체험: ${esc(c.x)}`);
+  if(c.an)info.push(`🐶 반려동물: ${esc(c.an)}`);
+  if(c.h)info.push(`🏠 <a href="${esc(c.h)}" target="_blank" rel="noopener">홈페이지</a>`);
+  info.push(`ℹ️ <a href="https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no=${esc(c.i)}" target="_blank" rel="noopener">고캠핑 상세 보기</a>`);
+  s.push(`<div class="sec"><h3>ℹ️ 캠핑장 정보</h3><div class="info">${info.join("<br>")}</div></div>`);
+  return s.join("");
+}
+
+// ---------- 시작
+async function unlock(pw,quiet){
+  $("pwBtn").textContent="여는 중…";
+  try{
+    DAILY=await decrypt(await getJ("daily.enc.json"),pw);
+    PW=pw;store.set("kcp_pw",pw);$("lock").hidden=true;
+    await render();
+  }catch(e){
+    DAILY=null;Object.keys(CACHE).forEach(k=>delete CACHE[k]);
+    $("lock").hidden=false;if(!quiet)$("pwErr").textContent="비밀번호가 맞지 않아요. 최신 비밀번호를 확인해 주세요!";
+  }
+  $("pwBtn").textContent="열기";
+}
+(async()=>{
+  const r=await fetch("meta.json?"+Date.now());
+  if(!r.ok){$("upd").textContent="아직 데이터가 없어요. 잠시 후 다시 와주세요!";return}
+  META=await r.json();
+  if(!Object.keys(META.regions||{}).length){$("upd").textContent="캠핑장 데이터를 준비 중이에요. 잠시 후 다시 와주세요!";return}
+  $("upd").textContent=`업데이트 ${META.updated} · 캠핑장 ${(META.counts&&META.counts.camps)||""}곳`;
+  if(META.sample)$("sample").hidden=false;
+  setupUI();
+  $("pwBtn").onclick=()=>unlock($("pw").value.trim());
+  $("pw").onkeydown=e=>{if(e.key==="Enter")unlock($("pw").value.trim())};
+  const saved=store.get("kcp_pw");
+  if(saved)await unlock(saved,true);else $("lock").hidden=false;
+})();
+</script>
+</body>
+</html>
