@@ -382,6 +382,8 @@ CHAIN_M = ("하나로마트", "농협", "이마트", "홈플러스", "롯데마�
 def store_kind(name: str, cat: str) -> str | None:
     if "편의점" in cat or any(c.lower() in name.lower() for c in CHAIN_C):
         return "c"
+    if "아이스크림" in cat + name:
+        return None
     if any(w in cat for w in ("슈퍼", "마트", "할인점")) or any(c in name for c in CHAIN_M):
         return "m"
     return None
@@ -404,7 +406,7 @@ def store_codes(key: str) -> list[tuple[str, str]]:
     out = []
     for it in its:
         nm, cd = it.get("indsSclsNm") or "", it.get("indsSclsCd") or ""
-        if cd and any(w in nm for w in ("편의점", "슈퍼마켓", "대형마트", "할인점")):
+        if cd and "아이스크림" not in nm and any(w in nm for w in ("편의점", "슈퍼마켓", "대형마트", "할인점")):
             out.append((cd, nm))
     status["sources"]["store_codes"] = out
     return out
