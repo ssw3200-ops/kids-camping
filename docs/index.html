@@ -139,8 +139,8 @@ const WD=["일","월","화","수","목","금","토"];
 let META=null,DAILY=null,PW=null,ME=null,RAD=+(store.get("kcp_rad")||60),DAY=null,SORT="dist",SHOW=20;
 const CACHE={};
 const OPT={};
-const FLAGS=[["T","🤸 트램펄린"],["W","💦 물놀이장"],["P","🛝 놀이터"],["V","🏞️ 계곡·바다"],["M","🏪 매점"],["E","⚡ 전기"],["X","🎨 체험"],["G","✨ 글램핑"],["C","🚐 카라반"],["A","🐶 반려견"],["R","⛺ 장비대여"]];
-const KIDF={T:"🤸 트램펄린",W:"💦 물놀이장",P:"🛝 놀이터",K:"👶 키즈",V:"🏞️ 물놀이",X:"🎨 체험"};
+const FLAGS=[["T","🤸 트램펄린"],["W","💦 물놀이장"],["P","🎠 놀이터"],["V","🏞️ 계곡·바다"],["M","🏪 매점"],["E","⚡ 전기"],["X","🎨 체험"],["G","✨ 글램핑"],["C","🚐 카라반"],["A","🐶 반려견"],["R","⛺ 장비대여"]];
+const KIDF={T:"🤸 트램펄린",W:"💦 물놀이장",P:"🎠 놀이터",K:"👶 키즈",V:"🏞️ 물놀이",X:"🎨 체험"};
 
 (t=>{$("h1").innerHTML=[...t].map(c=>c===" "?" ":`<span>${c}</span>`).join("")})("아이랑 캠핑 한 번에 🏕️");
 
@@ -212,7 +212,7 @@ function hoursOn(t,day){
 function setupUI(){
   const regs=Object.keys(META.regions);
   $("region").innerHTML=regs.map(r=>`<option value="${r}">${r} (${META.regions[r].n}곳)</option>`).join("");
-  $("region").value=regs.includes(store.get("kcp_region"))?store.get("kcp_region"):(regs.includes("충남")?"충남":regs[0]);
+  $("region").value=regs.includes(store.get("kcp_region"))?store.get("kcp_region"):regs.slice().sort((a,b)=>META.regions[b].n-META.regions[a].n)[0];
   $("region").onchange=()=>{ME=null;$("loc").classList.remove("on");$("loc").textContent="📍 내 위치";$("rad").hidden=true;store.set("kcp_region",$("region").value);SHOW=20;render()};
   $("loc").onclick=locate;
   $("more").onclick=()=>{SHOW+=20;render(false)};
@@ -237,14 +237,18 @@ function chips(){
     else OPT[k]=!OPT[k];
     SHOW=20;chips();render()};
 }
-function locate(){
-  if(!navigator.geolocation){alert("이 휴대폰에서는 위치를 쓸 수 없어요. 지역을 직접 골라주세요.");return}
+function locate(auto){
+  // auto: 처음 열 때 자동으로 내 위치 기준. 실패하면 조용히 지역 목록으로
+  if(!navigator.geolocation){if(auto)return render();alert("이 휴대폰에서는 위치를 쓸 수 없어요. 지역을 직접 골라주세요.");return}
   $("loc").textContent="찾는 중…";
+  if(auto)$("list").innerHTML=`<div class="empty">📍 내 위치 근처 캠핑장 찾는 중…</div>`;
   navigator.geolocation.getCurrentPosition(async p=>{
     ME=[p.coords.latitude,p.coords.longitude];
+    const near=Object.entries(META.regions).sort((a,b)=>boxDist(a[1].box)-boxDist(b[1].box))[0];
+    if(near)$("region").value=near[0];
     $("loc").textContent="📍 내 주변";$("loc").classList.add("on");$("rad").hidden=false;SORT="dist";chips();SHOW=20;
     await render();
-  },()=>{$("loc").textContent="📍 내 위치";alert("위치 권한이 꺼져 있어요. 지역을 직접 골라주세요.")},{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
+  },async()=>{$("loc").textContent="📍 내 위치";if(auto)await render();else alert("위치 권한이 꺼져 있어요. 지역을 직접 골라주세요.")},{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
 }
 function boxDist(b){ // 내 위치에서 시도 범위 상자까지 거리
   const la=Math.min(Math.max(ME[0],b[0]),b[2]),lo=Math.min(Math.max(ME[1],b[1]),b[3]);return dist(ME[0],ME[1],la,lo)}
@@ -368,7 +372,7 @@ async function unlock(pw,quiet){
   try{
     DAILY=await decrypt(await getJ("daily.enc.json"),pw);
     PW=pw;store.set("kcp_pw",pw);$("lock").hidden=true;
-    await render();
+    if(ME)await render();else locate(true);
   }catch(e){
     DAILY=null;Object.keys(CACHE).forEach(k=>delete CACHE[k]);
     $("lock").hidden=false;if(!quiet)$("pwErr").textContent="비밀번호가 맞지 않아요. 최신 비밀번호를 확인해 주세요!";
