@@ -367,6 +367,8 @@ def fetch_medical(key: str) -> dict[str, list]:
                 out["e"].append([nm, tel, ll[0], ll[1], "", (it.get("dutyEmclsName") or "")[:12]])
             else:
                 fl = ""
+                if kind == "h" and any(w in nm for w in ("요양", "정신", "한방", "치과")):
+                    continue
                 if kind == "h" and any(w in nm for w in ("소아", "아동", "어린이")):
                     fl = "P"
                 out[kind].append([nm, it.get("dutyTel1") or "", ll[0], ll[1], times_of(it), fl])
@@ -696,7 +698,8 @@ def attach(camps: list[dict], med: dict, stores: list[list] | None, store_cache:
             sc = [x for x in sl if x[1][1] == "c"][:3]
             sm = [x for x in sl if x[1][1] == "m"][:3]
         c["ns"] = [[r[0], r[1], round(d, 1), R(r[2]), R(r[3])] for d, r in sorted(sc + sm, key=lambda x: x[0])]
-        sp = gt.near(la, lo, 60, 25)
+        core = re.sub(r"\s|캠핑장|오토캠핑|글램핑|캠핑|야영장|카라반", "", c["n"])[:4]
+        sp = gt.near(la, lo, 60, 25, keep=lambda r: not (core and core in r[0].replace(" ", "")) and "캠핑" not in r[0] and "야영" not in r[0])
         sp = sorted(sp, key=lambda x: (-(x[1][5] >= 3), -x[1][5] + x[0] / 6))[:10]
         c["ng"] = [[r[0], r[1], round(d, 1), R(r[2]), R(r[3]), r[4], r[5], r[6]] for d, r in sorted(sp, key=lambda x: (-(x[1][5] >= 3), x[0]))]
         for k in cnt:
