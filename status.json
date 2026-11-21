@@ -1,0 +1,59 @@
+{
+ "sources": {
+  "short": {
+   "base": "202611211100",
+   "grids": 739,
+   "called": 739,
+   "fails": 1,
+   "have": 738
+  },
+  "mid": {
+   "tmFc": "202611210600",
+   "regions": 10
+  },
+  "festival": {
+   "total": 387,
+   "got": 387,
+   "pages": 2,
+   "fields": [
+    "addr1",
+    "addr2",
+    "areacode",
+    "cat1",
+    "cat2",
+    "cat3",
+    "contentid",
+    "contenttypeid",
+    "cpyrhtDivCd",
+    "createdtime",
+    "eventenddate",
+    "eventstartdate",
+    "festivaltype",
+    "firstimage",
+    "firstimage2",
+    "lDongRegnCd",
+    "lDongSignguCd",
+    "lclsSystm1",
+    "lclsSystm2",
+    "lclsSystm3",
+    "mapx",
+    "mapy",
+    "mlevel",
+    "modifiedtime",
+    "progresstype",
+    "sigungucode",
+    "tel",
+    "title",
+    "zipcode"
+   ],
+   "kept": 69
+  }
+ },
+ "errors": [
+  "단기예보 (91, 135): HTTPSConnectionPool(host='apis.data.go.kr', port=443): Read timed out. (read timeout=60)"
+ ],
+ "reused": [
+  "camps"
+ ],
+ "updated": "2026-11-21 11:48"
+}
